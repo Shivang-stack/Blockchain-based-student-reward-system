@@ -44,9 +44,8 @@ exports.createTransaction = async (req, res) => {
     const privateKey = senderWallet.privateKey;
     const signedTransaction = signTransaction(transaction, privateKey);
     
-    console.log(signedTransaction)
-      // Save the transaction to the database
-      await signedTransaction.save();
+    // Save the transaction to the database
+    await signedTransaction.save();
   
       res.status(201).json({ message: 'Transaction created successfully' });
     } catch (error) {
@@ -108,11 +107,11 @@ const signTransaction = (transaction, privateKey) => {
   
   // Checks the balance of a wallet
 exports.getWalletBalance = async (req, res) => {
-    const publicKey = req.params.publicKey;
+    const walletId = req.params.walletId;
   
     try {
       // Get the wallet
-      const wallet = await Wallet.findOne({ publicKey });
+      const wallet = await Wallet.findOne({ walletId });
   
       // Calculate the balance
       const transactions = await Transaction.find({ $or: [{ sender: wallet._id }, { receiver: wallet._id }] });
@@ -151,6 +150,19 @@ exports.getAllBlocks = async (req, res) => {
       res.status(500).json({ error: 'Failed to retrieve blocks' });
     }
 };
+
+
+exports.getAllTransaction = (req, res, next) => {
+  Transaction.find().exec((err, events) => {
+    if (err || !events) {
+      return res.status(400).json({
+        error: "No Transaction was found in DB"
+      });
+    }
+    res.json(events)
+  });
+};
+
 
 
 

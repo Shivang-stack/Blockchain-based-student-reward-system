@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    participated,
-    isParticipated,
-    getAllParticipatentsByuserId,
+    registeredToEvent,
+    attendedTheEvent,
+    getAllParticipatentsByUserId,
     getAllParticipatentsByeventId,
     getAllParticipatentsById,
     getParticipates
-} = require("../controllers/particpates");
+} = require("../controllers/participates");
 const { isSignedIn, isAuthenticated, isAdmin } = require("../controllers/auth");
 const { getUserById } = require("../controllers/user");
 
@@ -19,17 +19,16 @@ router.param("particpatesId", getAllParticipatentsById);
 
 
 router.post(
-    "/particpates/create/:userId",
+    "/event/register/:userId",
     isSignedIn,
     isAuthenticated,
-    isAdmin,
-    participated
+    registeredToEvent
 );
 
 router.get("/particpates/:particpatesId", isSignedIn, isAuthenticated, getParticipates);
-router.get("/particpates/:eventId", isSignedIn, isAuthenticated, isAdmin,getAllParticipatentsByeventId);
-router.get("/particpates/:userId", isSignedIn, isAuthenticated, getAllParticipatentsByuserId);
-router.get("/isparticpated", isSignedIn, isAuthenticated, isAdmin,isParticipated);
+router.get("/particpates/event/:eventId", getAllParticipatentsByeventId);
+router.get("/particpates/user/:userId", isSignedIn, isAuthenticated, getAllParticipatentsByUserId);
+router.post("/attended/event", isSignedIn,attendedTheEvent);
 
 // router.put("/particpates/:particpatesId", isSignedIn, isAuthenticated, updateParticipates);
 

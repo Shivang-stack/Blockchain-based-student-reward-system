@@ -11,6 +11,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const eventRoutes = require("./routes/event");
+const participatesRoutes = require("./routes/participates");
 const blockRoutes = require("./routes/block");
 
 const { application } = require("express");
@@ -38,6 +39,7 @@ app.get("/", (req, res) => {
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", eventRoutes);
+app.use("/api", participatesRoutes);
 app.use("/api", blockRoutes);
 
 //PORT

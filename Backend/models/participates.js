@@ -13,18 +13,9 @@ const participatesSchema = new mongoose.Schema(
       ref: "Event",
       required: true
     },
-    reward: {
-      type: Number,
-      required: true
-    },
-    date:{
-      type:Date,
-      required:true
-    },
     isAttended:{
       type:Boolean,
       default: false,
-      required:true
     }
   },
   { timestamps: true }

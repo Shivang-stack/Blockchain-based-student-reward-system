@@ -22,15 +22,14 @@ const eventSchema = new mongoose.Schema(
     reward:{
       type: Number,
       required:true,
-      max: 10,
     },
     start_date:{
       type: Date,
-      required: true
+      default:Date.now,
     },
     end_date:{
       type: Date,
-      required: true
+      default:Date.now,
     }    
   },
   { timestamps: true }
