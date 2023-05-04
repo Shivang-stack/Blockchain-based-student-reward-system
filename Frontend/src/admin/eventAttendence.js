@@ -61,6 +61,9 @@ const EventAttendence = ({ match }) => {
                   <button className="btn btn-primary btn-lg" onClick={handleAttendence(event.student_id._id)}>
                     attended 
                   </button>
+                  <button className="btn btn-primary btn-lg" onClick={handleAttendence(event.student_id._id)}>
+                    Proof of Attendance
+                  </button>
                 </div>
                 </div>
             );
