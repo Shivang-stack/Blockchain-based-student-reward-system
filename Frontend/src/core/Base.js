@@ -1,5 +1,6 @@
 import React from "react";
 import Menu from "./Menu";
+import Titlebar from "../user/Titlebar";
 
 const Base = ({
   title = "My Title",
@@ -13,9 +14,14 @@ const Base = ({
       <div className="jumbotron bg-dark text-white text-center">
         <h2 className="display-4 font-weight-bold">{title}</h2>
         <p className="lead">{description}</p>
+        
       </div>
+     
       <div className={className}>{children}</div>
     </div>
+   <div>
+   
+   </div>
     <footer className="footer bg-dark mt-auto py-3 ">
       <div className="container-fluid bg-dark text-white text-center my-3">
         <h4>If you got any questions, feel free to reach out!</h4>
