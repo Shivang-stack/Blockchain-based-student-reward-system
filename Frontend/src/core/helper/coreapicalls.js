@@ -18,3 +18,13 @@ export const getEventById = eventId => {
     .catch(err => console.log(err));
 };
 
+
+export const getCategoryById = (categoryId) => {
+  return fetch(`${API}/category/${categoryId}`, {
+    method: "GET",
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((err) => console.log(err));
+};

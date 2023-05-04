@@ -3,56 +3,57 @@ const Block = require('../models/block');
 const Wallet = require('../models/wallet');
 const Transaction = require('../models/transaction');
 const User = require('../models/user');
-
+const mongoose = require("mongoose");
 
 // Creates a new transaction
 // Creates a new transaction
 exports.createTransaction = async (req, res) => {
-    const { senderUsn, senderPrivateKey, receiverUsn, amount } = req.body;
-  
-    try {
-      // Get the sender and receiver wallets
-      const senderUser = await User.findOne({ usn: senderUsn });
-      const receiverUser = await User.findOne({ usn: receiverUsn });
-  
-      // Verify that the sender has role 1 and the receiver has role 0
-      if (senderUser.role !== 1 || receiverUser.role !== 0) {
-        return res.status(400).json({ error: 'Invalid transaction' });
-      }
-      const senderWalletID=senderUser.wallet._id
-      const receiverWalletID=receiverUser.wallet._id
-      const senderWallet = await Wallet.findOne({ _id: senderWalletID });
-      const receiverWallet = await Wallet.findOne({_id: receiverWalletID });
-      
-      // Verify that the sender has enough balance
-      if (senderWallet.balance < amount) {
-        return res.status(400).json({ error: 'Insufficient balance' });
-      }
-  
-      // Create a new transaction
-      const transaction = new Transaction({
-        sender: senderWallet._id,
-        receiver: receiverWallet._id,
-        amount,
-      });
-  
-    //   // Sign the transaction using the sender's private key
-    //   const signature = crypto.createSign('SHA256').update(transaction.toString()).sign(senderPrivateKey, 'hex');
-    //   transaction.signature = signature;
-    
+  const { senderUsn, senderPrivateKey, receiverUsn, amount } = req.body;
+
+  try {
+    // Get the sender and receiver wallets
+    const senderUser = await User.findOne({ usn: senderUsn });
+    const receiverUser = await User.findOne({ usn: receiverUsn });
+
+    // Verify that the sender has role 1 and the receiver has role 0
+    if (senderUser.role !== 1 || receiverUser.role !== 0) {
+      return res.status(400).json({ error: 'Invalid transaction' });
+    }
+
+    const senderWallet = await Wallet.findById(senderUser.wallet._id);
+    const receiverWallet = await Wallet.findById(receiverUser.wallet._id);
+
+    // Verify that the sender has enough balance
+    if (senderWallet.balance < amount) {
+      return res.status(400).json({ error: 'Insufficient balance' });
+    }
+
+    // Create a new transaction
+    const transaction = new Transaction({
+      sender: senderWallet._id,
+      receiver: receiverWallet._id,
+      amount,
+    });
+
     // Sign the transaction using the sender's private key
     const privateKey = senderWallet.privateKey;
     const signedTransaction = signTransaction(transaction, privateKey);
-    
-    // Save the transaction to the database
-    await signedTransaction.save();
-  
-      res.status(201).json({ message: 'Transaction created successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  };
+
+    // Perform transactional update of wallets and transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await senderWallet.updateOne({ $inc: { balance: -amount } }, { session });
+    await receiverWallet.updateOne({ $inc: { balance: amount } }, { session });
+    await signedTransaction.save({ session });
+    await session.commitTransaction();
+
+    res.status(201).json({ message: 'Transaction created successfully' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 // Mines a new block with pending transactions
 exports.mineBlock = async (req, res) => {
     try {
@@ -111,19 +112,10 @@ exports.getWalletBalance = async (req, res) => {
   
     try {
       // Get the wallet
-      const wallet = await Wallet.findOne({ walletId });
+      const wallet = await Wallet.findOne({ _id : walletId });
   
-      // Calculate the balance
-      const transactions = await Transaction.find({ $or: [{ sender: wallet._id }, { receiver: wallet._id }] });
-      let balance = 0;
-      for (const transaction of transactions) {
-        if (transaction.sender.toString() === wallet._id.toString()) {
-          balance -= transaction.amount;
-        } else {
-          balance += transaction.amount;
-        }
-      }
-  
+      let balance = wallet.balance
+      
       res.status(200).json({ balance });
     } catch (error) {
       console.log(error);

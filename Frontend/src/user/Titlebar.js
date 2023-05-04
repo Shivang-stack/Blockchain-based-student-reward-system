@@ -1,21 +1,21 @@
-import React from 'react'
-import {Link,withRouter} from "react-router-dom"
-const Titlebar = () => (
+// import React from 'react'
+// import {Link,withRouter} from "react-router-dom"
+// const Titlebar = () => (
 
-    <div>
-        <ul className="nav nav-tabs bg-dark">
-        <li className="nav-item">
-            <Link className="nav-link" to='/'>
-                Categories of Events
-            </Link>
-        </li>
+//     <div>
+//         <ul className="nav nav-tabs bg-dark">
+//         <li className="nav-item">
+//             <Link className="nav-link" to='/'>
+//                 Categories of Events
+//             </Link>
+//         </li>
 
-        </ul>
+//         </ul>
        
-    </div>
+//     </div>
    
     
-)
+// )
 
 
-export default withRouter(Titlebar);
+// export default withRouter(Titlebar);
