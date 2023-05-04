@@ -13,7 +13,7 @@ const userRoutes = require("./routes/user");
 const eventRoutes = require("./routes/event");
 const participatesRoutes = require("./routes/participates");
 const blockRoutes = require("./routes/block");
-
+const categoryRoutes = require("./routes/category");
 const { application } = require("express");
 
 //DB Connection
@@ -41,6 +41,7 @@ app.use("/api", userRoutes);
 app.use("/api", eventRoutes);
 app.use("/api", participatesRoutes);
 app.use("/api", blockRoutes);
+app.use("/api", categoryRoutes);
 
 //PORT
 const port = process.env.PORT || 8000;

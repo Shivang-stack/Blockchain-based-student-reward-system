@@ -23,6 +23,11 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       required:true,
     },
+    category: {
+      type: ObjectId,
+      ref: "Category",
+      required: true
+    },
     start_date:{
       type: Date,
       default:Date.now,

@@ -1,134 +1,172 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Base from "../core/Base";
-import { isAutheticated } from "../auth/helper";
 import { Link } from "react-router-dom";
-import { createEvent } from "./helper/adminapicall";
+import { getCategories, createaEvent } from "./helper/adminapicall";
+import { isAutheticated } from "../auth/helper/index";
 
 const CreateEvent = () => {
+  const { user, token } = isAutheticated();
+
   const [values, setValues] = useState({
     name: "",
     description: "",
-    photo: "",
     link: "",
     reward: "",
+    categories: [],
+    category: "",
+    loading: false,
+    error: "",
+    createdEvent: "",
+    getaRedirect: false,
+    formData: ""
   });
 
-  const { name, description, link, reward } = values;
+  const {
+    name,
+    description,
+    link,
+    reward,
+    categories,
+    category,
+    loading,
+    error,
+    createdEvent,
+    getaRedirect,
+    formData
+  } = values;
 
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const preload = () => {
+    getCategories().then(data => {
+      //console.log(data);
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({ ...values, categories: data, formData: new FormData() });
+      }
+    });
+  };
 
-  const { user, token } = isAutheticated();
+  useEffect(() => {
+    preload();
+  }, []);
 
-  const goBack = () => (
-    <div className="mt-5">
-      <Link className="btn btn-sm btn-success mb-3" to="/admin/dashboard">
-        Admin Home
-      </Link>
+  const onSubmit = event => {
+    event.preventDefault();
+    setValues({ ...values, error: "", loading: true });
+    createaEvent(user._id, token, formData).then(data => {
+      if (data.error) {
+        setValues({ ...values, error: data.error });
+      } else {
+        setValues({
+          ...values,
+          name: "",
+          description: "",
+          link: "",
+          reward: "",
+          loading: false,
+          createdEvent: data.name
+        });
+      }
+    });
+  };
+
+  const handleChange = name => event => {
+    const value =  event.target.value;
+    formData.set(name, value);
+    setValues({ ...values, [name]: value });
+  };
+
+  const successMessage = () => (
+    <div
+      className="alert alert-success mt-3"
+      style={{ display: createdEvent ? "" : "none" }}
+    >
+      <h4>{createdEvent} created successfully</h4>
     </div>
   );
 
-  const handleChange = (event) => {
-    setError("");
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-    setError("");
-    setSuccess(false);
-    
-    //backend request fired
-    createEvent(user._id, token, values).then(
-      (data) => {
-        if (data.error) {
-          console.log(data)
-          setError(true);
-        } else {
-          setError("");
-          setSuccess(true);
-          setValues({
-            name: "",
-            description: "",
-            photo: "",
-            link: "",
-            reward: "",
-          });
-        }
-      }
-    );
-  };
-
-  const successMessage = () => {
-    if (success) {
-      return <h4 className="text-success">Event created successfully</h4>;
-    }
-  };
-
-  const warningMessage = () => {
-    if (error) {
-      return <h4 className="text-danger">{error} Failed to create event</h4>;
-    }
-  };
-
-  const myEventForm = () => (
+  const createEventForm = () => (
     <form>
       <div className="form-group">
         <p className="lead font-weight-bold ">Enter the event</p>
         <input
-          type="text"
-          className="form-control my-3"
+          onChange={handleChange("name")}
           name="name"
-          value={name}
-          required
+          className="form-control"
           placeholder="Name"
-          onChange={handleChange}
+          value={name}
         />
-        <p className="lead font-weight-bold">Enter the description</p>
+      </div>
+      <div className="form-group">
+      <p className="lead font-weight-bold ">Enter the Description</p>
         <textarea
+          onChange={handleChange("description")}
           name="description"
-          onChange={handleChange}
           className="form-control"
           placeholder="Description"
           value={description}
         />
-        <p className="lead font-weight-bold">Enter the Registration Link</p>
-        <input
-          type="text"
-          className="form-control my-3"
-          name="link"
-          value={link}
-          placeholder="Enter Link"
-          onChange={handleChange}
-        />
-        <p className="lead font-weight-bold">Enter Event Reward</p>
-        <input
-          type="number"
-          className="form-control my-3"
-          name="reward"
-          value={reward}
-          placeholder="Enter reward"
-          onChange={handleChange}
-        />
-        <button onClick={onSubmit} className="btn btn-outline-info">
-          Create Event
-        </button>
       </div>
+      <div className="form-group">
+      <p className="lead font-weight-bold ">Enter the Link</p>
+        <input
+          onChange={handleChange("link")}
+          type="text"
+          className="form-control"
+          placeholder="link"
+          value={link}
+        />
+      </div>
+      <div className="form-group">
+      <p className="lead font-weight-bold ">Enter the Category</p>
+        <select
+          onChange={handleChange("category")}
+          className="form-control"
+          placeholder="Category"
+        >
+          <option>Select Category</option>
+          {categories &&
+            categories.map((cate, index) => (
+              <option key={index} value={cate._id}>
+                {cate.name}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div className="form-group">
+      <p className="lead font-weight-bold ">Enter the Reward</p>
+        <input
+          onChange={handleChange("reward")}
+          type="number"
+          className="form-control"
+          placeholder="Reward"
+          value={reward}
+        />
+      </div>
+
+      <button
+        type="submit"
+        onClick={onSubmit}
+        className="btn btn-success mb-3"
+      >
+        Create Event
+      </button>
     </form>
   );
 
   return (
     <Base
-      title="Welcome Admin"
-      description="Create Events here"
-      className="container bg-white p-4"
+      title="Add a event here!"
+      description="Welcome to event creation section"
+      className="container bg-info p-4"
     >
-      <div className="row bg-white rounded">
+      <Link to="/admin/dashboard" className="btn btn-md btn-dark mb-3">
+        Admin Home
+      </Link>
+      <div className="row bg-info text-white rounded">
         <div className="col-md-8 offset-md-2">
           {successMessage()}
-          {warningMessage()}
-          {myEventForm()}
-          {goBack()}
+          {createEventForm()}
         </div>
       </div>
     </Base>

@@ -1,20 +1,41 @@
 const Event = require("../models/event");
+const formidable = require("formidable");
+const _ = require("lodash");
+const fs = require("fs");
 
 
 exports.createEvent = (req, res) => {
-    const event = new Event(req.body);
-    event.save((err, event) => {
-        if (err) {
-          return res.status(400).json({
-            error: "NOT able to save event in DB"
-          });
-        }
-        res.json({
-          name: event.name,
-          description: event.description,
-          id: event._id,
-        });
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields) => {
+    if (err) {
+      return res.status(400).json({
+        error: "problem with data"
       });
+    }
+    //destructure the fields
+    const { name, description, link, category, reward } = fields;
+
+    if (!name || !description || !link || !category || !reward) {
+      return res.status(400).json({
+        error: "Please include all fields"
+      });
+    }
+
+    let event = new Event(fields);
+    console.log(event);
+
+    //save to the DB
+    event.save((err, event) => {
+      if (err) {
+        return res.status(400).json({
+          error: "Saving Event in DB failed"
+        });
+      }
+      res.json(event);
+    });
+  });
 };
   
 exports.getEventById = (req, res, next, id) => {
