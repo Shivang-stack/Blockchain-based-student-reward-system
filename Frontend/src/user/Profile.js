@@ -50,7 +50,7 @@ const Profile = () => {
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/user/event/attendence" className="nav-link text-success">
+            <Link to="/user/upload/certificate" className="nav-link text-success">
               Upload Achievements Certificates
             </Link>
           </li>

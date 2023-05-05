@@ -1,8 +1,10 @@
 const Event = require("../models/event");
+const QrCode = require("../models/qrcode");
 const formidable = require("formidable");
 const _ = require("lodash");
 const fs = require("fs");
-
+const QRCode = require('qrcode');
+const event = require("../models/event");
 
 exports.createEvent = (req, res) => {
   let form = new formidable.IncomingForm();
@@ -24,8 +26,7 @@ exports.createEvent = (req, res) => {
     }
 
     let event = new Event(fields);
-    console.log(event);
-
+    
     //save to the DB
     event.save((err, event) => {
       if (err) {
@@ -37,9 +38,46 @@ exports.createEvent = (req, res) => {
     });
   });
 };
+
+exports.getQRCodeByEventId = async (req, res) => {
+  try {
+    const eventId = req.params.eventId;
+    const event = await Event.findById(eventId).exec();
+    if (!event) {
+      return res.status(400).json({
+        error: 'No event was found in DB'
+      });
+    }
+    
+    let qrcode = new QrCode();
+    const qrCodeString = `${eventId}`;
+    const qrCodeImage = await QRCode.toDataURL(qrCodeString);
+    const base64Image = qrCodeImage.split(';base64,').pop();
+
+    qrcode.event_id = eventId;
+    qrcode.code_image = {
+      data: Buffer.from(base64Image, 'base64'),
+      contentType: 'image/png',
+    };
+
+    const savedQrCode = await qrcode.save();
+    console.log(savedQrCode._id)
+    res.set("Content-Type", qrcode.code_image.contentType);
+    return res.send(qrcode.code_image.data);
+    
+  } catch (err) {
+    if (!res.headersSent) {
+      res.status(400).json({
+        error: "Saving QRCODE in DB failed"
+      });
+    }
+  }
+};
+
   
-exports.getEventById = (req, res, next, id) => {
-  Event.findById(id).exec((err, event) => {
+exports.getEventById = (req, res, next) => {
+  eventId=req.params.eventId
+  Event.find({ _id: eventId }).exec((err, event) => {
     if (err || !event) {
       return res.status(400).json({
         error: "No event was found in DB"

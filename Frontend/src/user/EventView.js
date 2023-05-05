@@ -22,16 +22,16 @@ const EventView = ({ match }) => {
 
   const loadEvent = (eventId) => {
     getEventById(eventId).then((data) => {
-      if (data.error) {
-        setError(data.error);
+      if (data[0].error) {
+        setError(data[0].error);
       } else {
         setValues({
           ...values,
-          id: data.id,
-          name: data.name,
-          description: data.description,
-          link: data.link,
-          reward: data.reward,
+          id: data[0].id,
+          name: data[0].name,
+          description: data[0].description,
+          link: data[0].link,
+          reward: data[0].reward,
         });
       }
     });

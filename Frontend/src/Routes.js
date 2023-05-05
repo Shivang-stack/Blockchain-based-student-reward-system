@@ -14,6 +14,7 @@ import EventList from "./admin/eventList";
 import EventAttendence from "./admin/eventAttendence";
 import Transaction from "./admin/transaction";
 import RegisteredEvents from "./user/RegisteredEvents";
+import EventQrcode from "./admin/eventQrcode";
 
 
 const Routes = () => {
@@ -24,6 +25,7 @@ const Routes = () => {
           <Route path="/signup" exact component={Signup} />
           <Route path="/signin" exact component={Signin} />
           <PrivateRoute path="/user/profile" exact component={Profile} />
+          <PrivateRoute path="/user/upload/certificate" exact component={Profile} />
           <PrivateRoute path="/user/registered/event/:userId" exact component={RegisteredEvents} />
           <Route path="/eventv/:eventId" exact component={EventView} />
           <AdminRoute path="/admin/dashboard" exact component={AdminDashBoard} />
@@ -32,6 +34,7 @@ const Routes = () => {
           <AdminRoute path="/admin/event/attendence" exact component={EventList} />
           <Route path="/admin/event/view/:eventId" exact component={EventAttendence} />
           <AdminRoute path="/admin/view/transactions" exact component={Transaction} />
+          <AdminRoute path="/admin/view/event/qrcode" exact component={EventQrcode} />
         </Switch>
       </BrowserRouter>
     );

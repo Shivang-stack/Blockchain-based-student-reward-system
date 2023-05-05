@@ -33,6 +33,11 @@ const AdminDashBoard = () => {
               View Transactions 
             </Link>
           </li>
+          <li className="list-group-item">
+            <Link to="/admin/view/event/qrcode" className="nav-link text-success">
+              Get Event QrCode 
+            </Link>
+          </li>
         </ul>
       </div>
     );
