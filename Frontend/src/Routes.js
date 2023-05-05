@@ -13,6 +13,7 @@ import ManageEvent from "./admin/manageEvent";
 import EventList from "./admin/eventList";
 import EventAttendence from "./admin/eventAttendence";
 import Transaction from "./admin/transaction";
+import RegisteredEvents from "./user/RegisteredEvents";
 
 
 const Routes = () => {
@@ -23,7 +24,7 @@ const Routes = () => {
           <Route path="/signup" exact component={Signup} />
           <Route path="/signin" exact component={Signin} />
           <PrivateRoute path="/user/profile" exact component={Profile} />
-          <PrivateRoute path="/user/registered/event" exact component={Profile} />
+          <PrivateRoute path="/user/registered/event/:userId" exact component={RegisteredEvents} />
           <Route path="/eventv/:eventId" exact component={EventView} />
           <AdminRoute path="/admin/dashboard" exact component={AdminDashBoard} />
           <AdminRoute path="/admin/create/event" exact component={CreateEvent} />

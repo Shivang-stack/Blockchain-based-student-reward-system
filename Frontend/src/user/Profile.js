@@ -28,12 +28,10 @@ const Profile = () => {
     });
   };
 
-  const{
-    user , token
-  } =isAutheticated();
- 
+  const { user, token } = isAutheticated();
+  
   useEffect(() => {
-    fetchbalance(user.walletId);
+    fetchbalance(user.wallet);
   }, []);
 
   const userLeftSide = () => {
@@ -42,7 +40,7 @@ const Profile = () => {
         <h4 className="card-header bg-dark text-white">User Navigation</h4>
         <ul className="list-group">
           <li className="list-group-item">
-            <Link to="/user/registered/event" className="nav-link text-success">
+            <Link to={`/user/registered/event/${user._id}`} className="nav-link text-success">
               Registered Events
             </Link>
           </li>
