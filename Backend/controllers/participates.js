@@ -74,18 +74,18 @@ exports.getAllParticipatentsByeventId = (req, res, next) => {
 // };
 
 
-exports.getAllParticipatentsByUserId = (req, res, next, id) => {
-    const student_id = req.param.userId;
-    Participates.findById({student_id}).exec((err, participates) => {
-    if (err || !participates) {
-      return res.status(400).json({
-        error: "No participates was found in DB"
-      });
-    }
-    req.profile = participates;
-    res.json(participates)
-    next();
-  });
+exports.getAllParticipatentsByUserId = (req, res, next) => {
+    const student_id = req.params.userId;
+    Participates.find({ student_id: student_id }).populate('event_id').exec((err, participates) => {
+      if (err || !participates) {
+        return res.status(400).json({
+          error: "No Events were found in DB related to the user"
+        });
+      }
+      req.profile = participates;
+      res.json(participates);
+      next();
+    });
 };
 
 

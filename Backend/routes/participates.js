@@ -32,10 +32,4 @@ router.post("/attended/event", isSignedIn,attendedTheEvent);
 
 // router.put("/particpates/:particpatesId", isSignedIn, isAuthenticated, updateParticipates);
 
-
-
-
-  
-
-
 module.exports = router;
