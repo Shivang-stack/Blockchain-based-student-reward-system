@@ -4,7 +4,6 @@ const formidable = require("formidable");
 const _ = require("lodash");
 const fs = require("fs");
 const QRCode = require('qrcode');
-const event = require("../models/event");
 
 exports.createEvent = (req, res) => {
   let form = new formidable.IncomingForm();
@@ -61,7 +60,6 @@ exports.getQRCodeByEventId = async (req, res) => {
     };
 
     const savedQrCode = await qrcode.save();
-    console.log(savedQrCode._id)
     res.set("Content-Type", qrcode.code_image.contentType);
     return res.send(qrcode.code_image.data);
     

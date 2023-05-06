@@ -50,6 +50,11 @@ const Profile = () => {
             </Link>
           </li>
           <li className="list-group-item">
+            <Link to="/user/view/certificate" className="nav-link text-success">
+              View Achievements Certificates
+            </Link>
+          </li>
+          <li className="list-group-item">
             <Link to="/user/view/transactions" className="nav-link text-success">
               View Reward Table 
             </Link>

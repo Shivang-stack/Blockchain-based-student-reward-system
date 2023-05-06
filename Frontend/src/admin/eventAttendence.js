@@ -3,7 +3,6 @@ import Base from "../core/Base";
 import { Link } from "react-router-dom";
 import { isAutheticated } from "../auth/helper";
 import { getEventAttendeesByEventId } from "./helper/adminapicall";
-import { attendedTheEvent } from "./helper/adminapicall";
 
 const EventAttendence = ({ match }) => {
   const [eventAttendees, setEventAttendees] = useState([]);
@@ -19,19 +18,6 @@ const EventAttendence = ({ match }) => {
         setError(data.error);
       } else {
         setEventAttendees(data);
-      }
-    });
-  };
-
-  const handleAttendence = (userId) => {
-    // userId.preventDefault();
-    const body = {
-      student_id: userId, // replace with actual userId
-      event_id: eventAttendees.event_id,
-    };
-    attendedTheEvent(token,body).then((data) => {
-      if (data.error) {
-        setError(data.error);
       }
     });
   };
@@ -58,12 +44,7 @@ const EventAttendence = ({ match }) => {
                     <h3 className="text-white text-left">{event.student_id.usn}</h3>
                 </div>
                 <div className="col-4">
-                  <button className="btn btn-primary btn-lg" onClick={handleAttendence(event.student_id._id)}>
-                    attended 
-                  </button>
-                  <button className="btn btn-primary btn-lg" onClick={handleAttendence(event.student_id._id)}>
-                    Proof of Attendance
-                  </button>
+                    <h3 className="text-white text-left">isAttended :{ event.isAttended ? "Yes": "No"}</h3>
                 </div>
                 </div>
             );

@@ -84,7 +84,7 @@ const RegisteredEvents = ({ match }) => {
   return (
     <Base title={`Welcome ${user.name}`} description="Manage Events Attendence here">
       {/* {successMessage} */}
-      <Link className="btn btn-info" to={`/admin/dashboard`}>
+      <Link className="btn btn-info" to={`/user/profile`}>
         <span className="">Profile</span>
       </Link>
       <div className="row">

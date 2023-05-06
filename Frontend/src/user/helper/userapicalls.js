@@ -94,3 +94,40 @@ export const getbalance = walletId => {
       .catch(err => console.log(err));
   };
   
+  
+
+  export const createaAchievement = (userId, token, achievement) => {
+    return fetch(`${API}/user/${userId}/achievement`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: achievement
+    })
+      .then(response => {
+        return response.json();
+      })
+      .catch(err => console.log(err));
+  };
+  
+
+  export const getCategories = () => {
+    return fetch(`${API}/categories`, {
+      method: "GET"
+    })
+      .then(response => {
+        return response.json();
+      })
+      .catch(err => console.log(err));
+  };
+
+  export const getAchievementsByUserId = userId => {
+    return fetch(`${API}/user/achievement/${userId}`, {
+      method: "GET"
+    })
+      .then(response => {
+        return response.json();
+      })
+      .catch(err => console.log(err));
+};

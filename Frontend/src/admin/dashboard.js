@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Base from "../core/Base";
 import { isAutheticated } from "../auth/helper/index";
 import { Link } from "react-router-dom";
+import { getbalance } from "../user/helper/userapicalls";
 
 const AdminDashBoard = () => {
-  const {
-    user: { name, email, role }
-  } = isAutheticated();
+  
+  const [values, setValues] = useState({
+    balance: "0",
+  });
+  
+  const [error, setError] = useState(false);
+  
+  const {balance} =values;
+  
+  const fetchbalance = walletId => {
+    getbalance(walletId).then(data => {
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setValues({
+          ...values,
+          balance: data.balance
+        });
+      }
+    });
+  };
+
+  const { user, token } = isAutheticated();
+  
+  useEffect(() => {
+    fetchbalance(user.wallet);
+  }, []);
 
   const adminLeftSide = () => {
     return (
@@ -19,23 +44,23 @@ const AdminDashBoard = () => {
             </Link>
           </li>
           <li className="list-group-item">
+            <Link to="/admin/view/event/qrcode" className="nav-link text-success">
+              Get Event QrCode 
+            </Link>
+          </li>
+          <li className="list-group-item">
             <Link to="/admin/events" className="nav-link text-success">
               Manage Events
             </Link>
           </li>
           <li className="list-group-item">
             <Link to="/admin/event/attendence" className="nav-link text-success">
-              Manage Event Attendence
+              View Event Attendees
             </Link>
           </li>
           <li className="list-group-item">
             <Link to="/admin/view/transactions" className="nav-link text-success">
               View Transactions 
-            </Link>
-          </li>
-          <li className="list-group-item">
-            <Link to="/admin/view/event/qrcode" className="nav-link text-success">
-              Get Event QrCode 
             </Link>
           </li>
         </ul>
@@ -49,13 +74,13 @@ const AdminDashBoard = () => {
         <h4 className="card-header">Admin Information</h4>
         <ul className="list-group">
           <li className="list-group-item">
-            <span className="badge badge-success mr-2">Name:</span> {name}
+            <span className="badge badge-success mr-2">Name:</span> {user.name}
           </li>
           <li className="list-group-item">
-            <span className="badge badge-success mr-2">Email:</span> {email}
+            <span className="badge badge-success mr-2">Email:</span> {user.email}
           </li>
           <li className="list-group-item">
-            <span className="badge badge-success mr-2">Balance:</span> 100000
+            <span className="badge badge-success mr-2">Balance:</span> {balance}
           </li>
         </ul>
       </div>
