@@ -38,14 +38,15 @@ export const getbalance = walletId => {
       .catch(err => console.log(err));
   };
 
-  export const registerToEvent = (userId, token, event) => {
+  export const registerToEvent = (userId, token, body) => {
     return fetch(`${API}/event/register/${userId}`, {
       method: "POST",
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
-      body: event
+      body: JSON.stringify(body)
     })
       .then(response => {
         return response.json();

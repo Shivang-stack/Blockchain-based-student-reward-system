@@ -41,12 +41,7 @@ const Profile = () => {
         <ul className="list-group">
           <li className="list-group-item">
             <Link to={`/user/registered/event/${user._id}`} className="nav-link text-success">
-              Registered Events
-            </Link>
-          </li>
-          <li className="list-group-item">
-            <Link to="/user/events" className="nav-link text-success">
-              Attendence Proof of the Events Atended
+              Registered Events / Scan QR CODE
             </Link>
           </li>
           <li className="list-group-item">
@@ -56,7 +51,7 @@ const Profile = () => {
           </li>
           <li className="list-group-item">
             <Link to="/user/view/transactions" className="nav-link text-success">
-              View Rewards
+              View Reward Table 
             </Link>
           </li>
         </ul>

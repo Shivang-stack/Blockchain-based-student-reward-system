@@ -16,6 +16,9 @@ const EventView = ({ match }) => {
   
   const [error, setError] = useState(false);
 
+  const [registered, setRegistered] = useState('');
+
+
   const { user, token } = isAutheticated();
 
   const { name, description, link, id, reward } = values;
@@ -24,7 +27,7 @@ const EventView = ({ match }) => {
     getEventById(eventId).then((data) => {
       if (data[0].error) {
         setError(data[0].error);
-      } else {
+      } else if (data[0]) {
         setValues({
           ...values,
           id: data[0].id,
@@ -36,19 +39,25 @@ const EventView = ({ match }) => {
       }
     });
   };
-
-  const handleRegister = () => {
-    const body = {
-      student_id: user._id, // replace with actual userId
-      event_id: values.id,
-    };
-    registerToEvent(user._id,token,body).then((data) => {
-      if (data.error) {
-        setError(data.error);
+  
+  const handleRegister = async () => {
+    try {
+      const body = {
+        student_id: user._id,
+        event_id: match.params.eventId,
+      };
+      const response = await registerToEvent(user._id, token, body);
+      if (response.error) {
+        setError(response.error);
+      } else {
+        setRegistered("Registered to Event");
       }
-    });
+    } catch (error) {
+      console.error(error);
+      setError("Something went wrong. Please try again later.");
+    }
   };
-
+  
   useEffect(() => {
     loadEvent(match.params.eventId);
   }, []);
@@ -69,6 +78,7 @@ const EventView = ({ match }) => {
             <button className="btn btn-primary btn-lg" onClick={handleRegister}>
               Click to Register 
             </button>
+            <h4>{registered}</h4>
             
           </div>
         </div>
