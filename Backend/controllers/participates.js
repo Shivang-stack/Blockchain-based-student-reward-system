@@ -1,5 +1,8 @@
 const Participates = require("../models/participates");
-
+const Wallet = require("../models/wallet");
+const Transaction = require("../models/transaction")
+const crypto = require('crypto');
+const mongoose = require("mongoose");
 
 exports.registeredToEvent = (req, res) => {
   const newParticipates = new Participates(req.body);
@@ -88,9 +91,64 @@ exports.getAllParticipatentsByUserId = (req, res, next) => {
     });
 };
 
+const automaticTransaction = async (receiverId, amount, eventId) => {
+  try{
+    // Find sender and receiver wallets
+    const senderWallet = await Wallet.findById(process.env.ADMIN_ID);
+    const receiverWallet = await Wallet.findById(receiverId);
+    const existingTrans= await Transaction.findOne({ event:eventId , receiver: receiverId })
+    
+    if (existingTrans) {
+      console.log('Transaction Already Exists')
+      return "Transaction Already Exists"
+    }
+
+    // Verify that the sender has enough balance
+    if (senderWallet.balance < amount) {
+      throw new Error('Insufficient balance');
+    }
+
+    // Create a new transaction
+    const transaction = new Transaction({
+      sender: senderWallet._id,
+      receiver: receiverWallet._id,
+      event: eventId,
+      amount,
+    });
+
+    
+    // Sign the transaction using the sender's private key
+    const privateKey = senderWallet.privateKey;
+    const signedTransaction = signTransaction(transaction, privateKey);
+    
+    // Perform transactional update of wallets and transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    await senderWallet.updateOne({ $inc: { balance: -amount } }, { session });
+    await receiverWallet.updateOne({ $inc: { balance: amount } }, { session });
+    await signedTransaction.save({ session });
+    await session.commitTransaction();
+    
+    console.log("Transaction Performed")
+    return "Transaction Performed"
+  }
+  catch(error){
+    console.log(error)
+    return "Error Occured"
+  }
+}
+
+const signTransaction = (transaction, privateKey) => {
+  const hmac = crypto.createHmac('sha256', privateKey);
+  const signature = hmac.update(transaction.toString()).digest('hex');
+  transaction.signature = signature;
+  return transaction;
+};
+
+
 
 exports.attendedTheEvent = (req, res, next) => {
-  Participates.findOne({ event_id: req.body.event_id, student_id: req.body.student_id }).exec((err, participates) => {
+  Participates.findOne({ event_id: req.body.event_id, student_id: req.body.student_id }).populate('student_id event_id').exec((err, participates) => {
     if (err || !participates) {
       return res.status(400).json({
         error: "User has not participated in the event"
@@ -99,6 +157,9 @@ exports.attendedTheEvent = (req, res, next) => {
 
     participates.isAttended = true;
 
+    const transaction = automaticTransaction( participates.student_id.wallet,participates.event_id.reward, participates.event_id._id)
+
+    
     participates.save((err, savedParticipates) => {
       if (err) {
         return res.status(400).json({

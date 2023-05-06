@@ -113,7 +113,6 @@ exports.getWalletBalance = async (req, res) => {
     try {
       // Get the wallet
       const wallet = await Wallet.findOne({ _id : walletId });
-  
       let balance = wallet.balance
       
       res.status(200).json({ balance });

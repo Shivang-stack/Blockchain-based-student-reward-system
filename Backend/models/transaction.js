@@ -12,6 +12,11 @@ const transactionSchema = new mongoose.Schema({
       ref: 'Wallet',
       required: true,
     },
+    event: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,
