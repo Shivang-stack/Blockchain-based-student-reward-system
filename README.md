@@ -1,6 +1,6 @@
 # Blockchain-based-student-reward-system
 
-Postman collection: https://api.postman.com/collections/16424236-a45ef139-a6a3-4031-9125-278e672fbc70?access_key=PMAT-01GZC90NAXYRJK9QR2A5EAJ521 
+
 
 1. clone the repo 
 

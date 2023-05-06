@@ -90,29 +90,26 @@ exports.getAllParticipatentsByUserId = (req, res, next) => {
 
 
 exports.attendedTheEvent = (req, res, next) => {
-    // const { eventId, student_id } = ;
-    Participates.findOne({ event_id: req.body.event_id, student_id: req.body.student_id }).exec((err, participates) => {
-      if (err || !participates) {
+  Participates.findOne({ event_id: req.body.event_id, student_id: req.body.student_id }).exec((err, participates) => {
+    if (err || !participates) {
+      return res.status(400).json({
+        error: "User has not participated in the event"
+      });
+    }
+
+    participates.isAttended = true;
+
+    participates.save((err, savedParticipates) => {
+      if (err) {
         return res.status(400).json({
-          error: "User has not participated in the event"
+          error: "NOT able to save participates in DB"
         });
       }
-      const newParticipates = new Participates({
-        "event_id": req.body.event_id, "student_id": req.body.student_id, "isAttended":true
+      res.json({
+        message:"Student Attendance Recorded"
       });
-      newParticipates.save((err, savedParticipates) => {
-        if (err) {
-          return res.status(400).json({
-            error: "NOT able to save participates in DB"
-          });
-        }
-        res.json({
-          student_id: savedParticipates.student_id,
-          isAttended: savedParticipates.isAttended,
-          event_id: savedParticipates.event_id
-        });
-      });
-      
     });
-  };
+
+  });
+};
   
