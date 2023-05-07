@@ -38,6 +38,7 @@ const EventQrcode = () => {
                 <div className="row text-center mb-2" key={index}>
                 <div className="col-6">
                     <h3 className="text-white text-left">{event.name}</h3>
+                    <p className="text-white text-left"><b>Description     :</b> {event.description}</p>
                 </div>
                 <div className="col-6">
                     <ImageHelper event={event} />
