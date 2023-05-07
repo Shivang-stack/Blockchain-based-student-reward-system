@@ -55,8 +55,8 @@ const Profile = () => {
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/user/view/transactions" className="nav-link text-success">
-              View Reward Table 
+            <Link to="/user/view/rewards" className="nav-link text-success">
+              View Reward List
             </Link>
           </li>
         </ul>

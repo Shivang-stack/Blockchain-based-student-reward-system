@@ -43,7 +43,7 @@ exports.updateUser = (req, res) => {
 
 
 exports.getAllUsers = (req, res) => {
-  User.find().exec((err, users) => {
+  User.find().populate('wallet').exec((err, users) => {
     if (err || !users) {
       return res.status(400).json({
         error: "No users was found in DB"
@@ -136,6 +136,18 @@ exports.certificate = (req, res, next) => {
   next();
 };
 
+exports.getAllAchievement = (req, res, next) => {
+  Achievement.find().populate('student_id').exec((err, achievement) => {
+    if (err || !achievement) {
+      return res.status(400).json({
+        error: "No achievement was found in DB"
+      });
+    }
+    req.achievement = achievement;
+    res.json(achievement) // set the req.achievement object
+    next();
+  });
+};
 
 
 // delete controllers

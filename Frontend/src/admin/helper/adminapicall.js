@@ -76,6 +76,16 @@ export const getCategories = () => {
     .catch(err => console.log(err));
 };
 
+export const getAllAchievement = () => {
+  return fetch(`${API}/achievements`, {
+    method: "GET"
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => console.log(err));
+};
+
 // //products calls
 
 // //create a product

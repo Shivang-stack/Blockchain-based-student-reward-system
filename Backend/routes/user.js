@@ -9,7 +9,8 @@ const {
   updateUser,
   certificate,
   getAchievementByUserId,
-  getAchievementById
+  getAchievementById,
+  getAllAchievement
 } = require("../controllers/user");
 const { isSignedIn, isAuthenticated, isAdmin } = require("../controllers/auth");
 
@@ -27,5 +28,6 @@ router.put("/user/:userId", isSignedIn, isAuthenticated, updateUser);
 
 router.get("/users",getAllUsers)
 
+router.get("/achievements",getAllAchievement)
 
 module.exports = router;

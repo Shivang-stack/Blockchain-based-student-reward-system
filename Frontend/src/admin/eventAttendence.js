@@ -36,7 +36,7 @@ const EventAttendence = ({ match }) => {
             <h2 className="text-center text-white my-3"></h2>
             {eventAttendees.map((event, index) => {
             return (
-                <div className="row text-center mb-2" key={index}>
+                <div className="row bg-dark rounded p-2 text-center mb-2" key={index}>
                 <div className="col-4">
                     <h3 className="text-white text-left">{event.event_id.name}</h3>
                 </div>

@@ -33,7 +33,7 @@ const Transaction = () => {
             <h2 className="text-center text-white my-3 font-weight-bolder">Total Transactions</h2>
             {blocks.map((block, index) => {
             return (
-                <div className="row text-center mb-2 border border-white" key={index}>
+                <div className="row bg-dark rounded p-2 text-center mb-2 shadow" key={index}>
                     <div className="col-11">
                         <p className="text-white text-center"><b>Sender     :</b> {block.sender}</p>
                         <p className="text-white text-center"><b>Receiver   :</b> {block.receiver}</p>

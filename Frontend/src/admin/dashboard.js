@@ -59,6 +59,11 @@ const AdminDashBoard = () => {
             </Link>
           </li>
           <li className="list-group-item">
+            <Link to="/admin/view/achievements" className="nav-link text-success">
+              View Students Achievements 
+            </Link>
+          </li>
+          <li className="list-group-item">
             <Link to="/admin/view/transactions" className="nav-link text-success">
               View Transactions 
             </Link>

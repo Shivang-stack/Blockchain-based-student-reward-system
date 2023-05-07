@@ -17,6 +17,8 @@ import RegisteredEvents from "./user/RegisteredEvents";
 import EventQrcode from "./admin/eventQrcode";
 import AddAchievement from "./user/createAchievement";
 import ViewAchievements from "./user/viewAchievements";
+import ViewAllAchievements from "./admin/viewAllAchievements";
+import ViewRewards from "./user/viewRewardList";
 
 
 const Routes = () => {
@@ -29,12 +31,14 @@ const Routes = () => {
           <PrivateRoute path="/user/profile" exact component={Profile} />
           <PrivateRoute path="/user/upload/certificate" exact component={AddAchievement} />
           <PrivateRoute path="/user/view/certificate" exact component={ViewAchievements} />
+          <PrivateRoute path="/user/view/rewards" exact component={ViewRewards} />
           <PrivateRoute path="/user/registered/event/:userId" exact component={RegisteredEvents} />
           <Route path="/eventv/:eventId" exact component={EventView} />
           <AdminRoute path="/admin/dashboard" exact component={AdminDashBoard} />
           <AdminRoute path="/admin/create/event" exact component={CreateEvent} />
           <AdminRoute path="/admin/events" exact component={ManageEvent} />
           <AdminRoute path="/admin/event/attendence" exact component={EventList} />
+          <AdminRoute path="/admin/view/achievements" exact component={ViewAllAchievements} />
           <Route path="/admin/event/view/:eventId" exact component={EventAttendence} />
           <AdminRoute path="/admin/view/transactions" exact component={Transaction} />
           <AdminRoute path="/admin/view/event/qrcode" exact component={EventQrcode} />

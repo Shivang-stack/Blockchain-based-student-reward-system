@@ -33,16 +33,16 @@ const EventList = () => {
             <h2 className="text-center text-white my-3">Total events</h2>
             {events.map((event, index) => {
             return (
-                <div className="row text-center mb-2" key={index}>
+                <div className="row bg-dark rounded p-2 text-center mb-2" key={index}>
                 <div className="col-6">
-                    <h3 className="text-white text-left">{event.name}</h3>
+                    <h3 className="text-white text-center">{event.name}</h3>
                 </div>
                 <div className="col-6">
                     <Link
                     className="btn btn-success"
                     to={`/admin/event/view/${event._id}`}
                     >
-                    <span className="">View Attendies/Give Attendence</span>
+                    <span className="">View Attendees</span>
                     </Link>
                 </div>
                 </div>
