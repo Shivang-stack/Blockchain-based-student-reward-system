@@ -41,7 +41,7 @@ const ManageEvents = () => {
                 <div className="col-4">
                     <Link
                     className="btn btn-success"
-                    to={`/admin/event/update/${event._id}`}
+                    to={`/admin/create/event`}
                     >
                     <span className="">Update</span>
                     </Link>
