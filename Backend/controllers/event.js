@@ -101,3 +101,52 @@ exports.getAllEvent = (req, res, next) => {
 exports.getEvent = (req, res) => {
     return res.json(req.profile);
 };
+
+exports.updateEvent = (req, res) => {
+  let form = new formidable.IncomingForm();
+  form.keepExtensions = true;
+
+  form.parse(req, (err, fields) => {
+    if (err) {
+      return res.status(400).json({
+        error: "problem with image"
+      });
+    }
+
+    //updation code
+    let event = req.event;
+    console.log(event)
+    event = _.extend(event, fields);
+
+    //save to the DB
+    event.save((err, event) => {
+      if (err) {
+        res.status(400).json({
+          error: "Updation of event failed"
+        });
+      }
+      res.json(event);
+    });
+  });
+};
+
+exports.deleteEvent = (req, res) => {
+  const eventId = req.params.eventId; // Assuming the event ID is passed as a parameter in the URL
+
+  Event.findByIdAndRemove(eventId, (err, deletedEvent) => {
+    if (err) {
+      return res.status(400).json({
+        error: "Failed to delete the event"
+      });
+    }
+    if (!deletedEvent) {
+      return res.status(404).json({
+        error: "Event not found"
+      });
+    }
+    res.json({
+      message: "Deletion was successful",
+      deletedEvent
+    });
+  });
+};

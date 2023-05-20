@@ -19,6 +19,7 @@ import AddAchievement from "./user/createAchievement";
 import ViewAchievements from "./user/viewAchievements";
 import ViewAllAchievements from "./admin/viewAllAchievements";
 import ViewRewards from "./user/viewRewardList";
+import UpdateEvent from "./admin/updateEvent";
 
 
 const Routes = () => {
@@ -36,6 +37,7 @@ const Routes = () => {
           <Route path="/eventv/:eventId" exact component={EventView} />
           <AdminRoute path="/admin/dashboard" exact component={AdminDashBoard} />
           <AdminRoute path="/admin/create/event" exact component={CreateEvent} />
+          <Route path="/admin/update/event/:eventId" exact component={UpdateEvent} />
           <AdminRoute path="/admin/events" exact component={ManageEvent} />
           <AdminRoute path="/admin/event/attendence" exact component={EventList} />
           <AdminRoute path="/admin/view/achievements" exact component={ViewAllAchievements} />

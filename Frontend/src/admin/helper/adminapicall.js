@@ -23,6 +23,14 @@ export const getEvents = () => {
       .catch(err => console.log(err));
 };
 
+export const getEvent = (eventId) => {
+  return fetch(`${API}/event/${eventId}`, { method: "GET" })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => console.log(err));
+};
+
 export const getBlocks = () => {
     return fetch(`${API}/blocks`, { method: "GET" })
       .then(response => {
@@ -86,6 +94,21 @@ export const getAllAchievement = () => {
     .catch(err => console.log(err));
 };
 
+export const deleteEvent = (eventId, userId, token) => {
+  return fetch(`${API}/event/${eventId}/${userId}`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => console.log(err));
+};
+
+
 // //products calls
 
 // //create a product
@@ -145,17 +168,20 @@ export const getAllAchievement = () => {
 
 // //update a product
 
-// export const updateProduct = (productId, userId, token, product) => {
-//   return fetch(`http://localhost:3000/api/product/${productId}/${userId}`, {
-//     method: "PUT",
-//     headers: {
-//       Accept: "application/json",
-//       Authorization: `Bearer ${token}`
-//     },
-//     body: product
-//   })
-//     .then(response => {
-//       return response.json();
-//     })
-//     .catch(err => console.log(err));
-// };
+export const updateEvent = (eventId, userId, token, formData) => {
+  return fetch(`${API}/event/${eventId}/${userId}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+  })
+    .then(response => {
+      if (response.status !== 200) {
+        throw new Error("Failed to update event");
+      }
+      return response.json();
+    })
+    .catch(err => console.log(err));
+};
