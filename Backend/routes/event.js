@@ -47,7 +47,7 @@ router.put(
 
 
 router.post(
-  "/event/update/:userId",
+  "/event/create/:userId",
   isSignedIn,
   isAuthenticated,
   isAdmin,

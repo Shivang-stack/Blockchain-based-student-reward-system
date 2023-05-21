@@ -53,7 +53,10 @@ const CreateEvent = () => {
   const onSubmit = event => {
     event.preventDefault();
     setValues({ ...values, error: "", loading: true });
+    console.log(user._id)
+    console.log(token)
     createaEvent(user._id, token, formData).then(data => {
+      console.log(data)
       if (data.error) {
         setValues({ ...values, error: data.error });
       } else {
@@ -101,6 +104,7 @@ const CreateEvent = () => {
       <p className="lead font-weight-bold ">Enter the Description</p>
         <textarea
           onChange={handleChange("description")}
+          rows={3}
           name="description"
           className="form-control"
           placeholder="Description"

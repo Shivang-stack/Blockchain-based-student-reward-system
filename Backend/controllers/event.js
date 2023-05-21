@@ -17,7 +17,7 @@ exports.createEvent = (req, res) => {
     }
     //destructure the fields
     const { name, description, link, category, reward } = fields;
-
+    
     if (!name || !description || !link || !category || !reward) {
       return res.status(400).json({
         error: "Please include all fields"

@@ -105,6 +105,7 @@ const CreateAchievement = () => {
       <p className="lead font-weight-bold ">Enter the details</p>
         <textarea
           onChange={handleChange("details")}
+          rows={3}
           name="details"
           className="form-control"
           placeholder="Description"
